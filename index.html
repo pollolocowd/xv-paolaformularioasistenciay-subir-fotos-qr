@@ -1,0 +1,1181 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invitación Digital</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+html{ scroll-behavior:smooth; }
+
+body{
+  background:#000;
+  display:flex;
+  justify-content:center;
+  perspective:1200px;
+}
+
+.bloque img{
+  width:100%;
+  display:block;
+}
+
+/* BOTÓN AUDIO */
+.audio-btn{
+  position: absolute;  /* antes estaba fixed */
+  top: 15px;           /* margen desde arriba del bloque */
+  right: 15px;         /* margen desde la derecha del bloque */
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#fff6b7,#ffd700,#d4af37,#b8960c);
+  box-shadow:0 10px 20px rgba(0,0,0,0.6),
+             inset 0 -4px 8px rgba(255,255,255,0.35),
+             inset 0 4px 6px rgba(0,0,0,0.4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  color:#fff;
+  cursor:pointer;
+  z-index:10;       /* suficiente para que quede arriba de la imagen */
+  animation:flotarAudio 3s ease-in-out infinite;
+}
+/* EFECTO SCROLL */
+.bloque{
+  opacity:0;
+  transform:translateY(120px) scale(.85) rotateX(25deg);
+  filter:blur(8px);
+  transition:
+  transform 1.4s cubic-bezier(.19,1,.22,1),
+  opacity 1.2s ease,
+  filter 1.2s ease;
+  transform-origin:center top;
+  will-change:transform,opacity,filter;
+}
+.bloque.visible{
+  opacity:1;
+  transform:translateY(0) scale(1) rotateX(0deg);
+  filter:blur(0);
+}
+
+/* TEXTO BLOQUE 2 */
+.bloque-btn,
+.bloque-reflejo{
+  position:relative;
+  overflow:hidden;
+}
+
+.bloque-btn::after,
+.bloque-reflejo::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:50%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.30) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform:translateX(-150%) skewX(-20deg);
+  pointer-events:none;
+  animation:shine 3s ease-in-out infinite;
+}
+@keyframes shine{
+  0%{
+    transform:translateX(-150%) skewX(-20deg);
+    opacity:0;
+  }
+  20%{
+    opacity:1;
+  }
+  60%{
+    transform:translateX(250%) skewX(-20deg);
+    opacity:0;
+  }
+  100%{
+    transform:translateX(250%) skewX(-20deg);
+    opacity:0;
+  }
+}
+
+
+/* PARTICULAS */
+.bloque-particulas,
+.bloque-particulas-xv,
+.bloque-contador{
+  position:relative;
+}
+
+canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+
+/* CONTADOR */
+.countdown{
+  position:absolute;
+  bottom:19%;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;
+  z-index:5;
+}
+
+.time-box{
+  width:68px;
+  height:78px;
+  background:linear-gradient(
+    145deg,
+    #fff8dc 0%,
+    #f7e27c 20%,
+    #d4af37 45%,
+    #b8860b 70%,
+    #fff8dc 100%
+  );
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:#2c1c00;
+  box-shadow:0 0 18px rgba(212,175,55,0.6);
+  animation:floatGold 3s ease-in-out infinite;
+}
+
+.time-box span{
+  font-size:26px;
+  font-weight:700;
+  color:#2c1c00;
+}
+
+.time-box small{
+  font-size:11px;
+  color:#3b2a00;
+}
+
+@keyframes floatGold{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+  100%{transform:translateY(0)}
+}
+
+@keyframes flotarAudio{
+  0%{
+    transform:translateY(0);
+  }
+  50%{
+    transform:translateY(-6px);
+  }
+  100%{
+    transform:translateY(0);
+  }
+}
+
+/* BLOQUE 5 ESTRELLAS */
+.bloque-estrellas{
+  position:relative;
+  overflow:hidden;
+}
+
+.estrella{
+  position:absolute;
+  width:8px;
+  height:8px;
+  background:radial-gradient(circle,
+    rgba(255,255,180,1) 0%,
+    rgba(255,215,0,0.9) 40%,
+    rgba(255,215,0,0.2) 70%,
+    transparent 100%);
+  border-radius:50%;
+  box-shadow:0 0 8px rgba(255,215,0,0.9);
+  animation:destello 2.5s ease-in-out infinite;
+}
+
+/* Posiciones */
+.e1{ top:20%; left:25%; animation-delay:0s; }
+.e2{ top:35%; right:20%; animation-delay:.6s; }
+.e3{ bottom:30%; left:30%; animation-delay:1.2s; }
+.e4{ bottom:20%; right:25%; animation-delay:1.8s; }
+
+@keyframes destello{
+  0%,100%{
+    transform:scale(0.6);
+    opacity:0.4;
+  }
+  50%{
+    transform:scale(1.4);
+    opacity:1;
+  }
+}
+
+.bloque-ubicacion{
+  position: relative;
+  height: auto; /* se adapta a la imagen */
+}
+
+/* Botones centrados horizontalmente */
+.btn-ubicacion{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  display:inline-block;
+  padding:10px 18px;
+  background:linear-gradient(145deg,#fff6b7,#ffd700,#d4af37,#b8960c);
+  color:#fff;
+  font-weight:600;
+  border-radius:12px;
+  text-decoration:none;
+  box-shadow:0 4px 12px rgba(255,215,0,0.7);
+  transition:transform .3s, box-shadow .3s, background .3s;
+  font-size:14px;
+  animation:latido 2s infinite;
+}
+
+/* Ajusta la posición vertical según proporción de la imagen */
+.btn-parroquia{
+  top: 9%;  /* puedes subir o bajar cambiando el % */
+}
+
+.btn-salon{
+  top: 59%;  /* puedes subir o bajar cambiando el % */
+}
+
+/* BLOQUE 9 */
+.bloque-acordeon{
+  position:relative;
+  overflow:hidden;
+}
+
+/* BOTÓN 3D DORADO */
+.btn-datos{
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding:14px 28px;
+  background:linear-gradient(145deg,#ffd700,#b8860b);
+  color:#fff;
+  font-weight:700;
+  border-radius:16px;
+  cursor:pointer;
+  box-shadow:0 8px 0 #c18f00, 0 12px 20px rgba(255,215,0,0.5);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  z-index:10;
+
+  animation: latido 2s infinite;
+}
+.flecha{
+  font-size:14px;
+  animation:rebote 1.2s infinite;
+}
+
+.panel-datos{
+  position: absolute;
+  top: 85%; /* justo debajo del botón */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  background: rgba(255,255,255,0.95);
+  border-radius: 18px;
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .5s ease, padding .4s ease;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  text-align:left;
+}
+
+.panel-datos.activo{
+  max-height:200px;
+  padding:20px;
+}
+
+
+@keyframes latido{
+  0%{
+    transform:translateX(-50%) scale(1);
+  }
+  50%{
+    transform:translateX(-50%) scale(1.08);
+  }
+  100%{
+    transform:translateX(-50%) scale(1);
+  }
+}
+
+/* FORMULARIO BOTONES DORADOS */
+
+#formConfirmacion button,
+#btnQR,
+#btnCalendario{
+  padding:12px 20px;
+  background:linear-gradient(145deg,#fff6b7,#ffd700,#d4af37,#b8960c);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+  box-shadow:0 6px 15px rgba(212,175,55,0.6);
+  cursor:pointer;
+  transition:.3s;
+}
+
+/* efecto al tocar */
+#formConfirmacion button:hover,
+#btnQR:hover,
+#btnCalendario:hover{
+  transform:scale(1.05);
+  box-shadow:0 10px 20px rgba(212,175,55,0.9);
+}
+
+.bloque.visible:hover{
+  transform:translateY(-8px);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.5),
+    0 0 25px rgba(212,175,55,0.6);
+}
+
+.contenedor{
+  transform-style:preserve-3d;
+  transition:transform .2s ease-out;
+}
+
+.bloque{
+  transform-style:preserve-3d;
+  transition:transform .6s ease;
+}
+
+/* CONTENEDOR BLOQUE FECHA */
+.bloque-fecha{
+  position:relative;
+}
+
+/* TEXTO FECHA */
+.fecha-evento{
+  position:absolute;
+
+  top:6%;     /* mueve ARRIBA / ABAJO */
+  left:50%;    /* mueve IZQUIERDA / DERECHA */
+
+  transform:translate(-50%,-50%);
+
+  font-family:'Great Vibes',cursive;
+  font-size:38px;
+  color:#d4af37;
+
+  text-shadow:
+    0 2px 5px rgba(0,0,0,0.6),
+    0 0 10px rgba(212,175,55,0.7);
+
+  z-index:5;
+}
+
+.popup-error{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.popup-contenido{
+background:white;
+padding:20px;
+border-radius:10px;
+text-align:center;
+font-size:18px;
+}
+
+.popup-contenido button{
+margin-top:10px;
+padding:8px 20px;
+border:none;
+background:#c9a227;
+color:white;
+border-radius:5px;
+}
+
+.popup-pass{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.popup-contenido{
+background:white;
+padding:30px;
+border-radius:15px;
+text-align:center;
+width:300px;
+box-shadow:0 0 20px rgba(0,0,0,0.3);
+}
+
+.popup-contenido h2{
+margin-bottom:10px;
+font-family:serif;
+}
+
+.popup-contenido input{
+width:90%;
+padding:10px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.botones{
+margin-top:15px;
+}
+
+.botones button{
+padding:8px 15px;
+margin:5px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#d4af37;
+color:white;
+}
+
+#mensajeError{
+color:red;
+display:none;
+margin-top:10px;
+}
+
+.texto-descarga{
+font-size:14px;
+font-weight:600;
+background:linear-gradient(
+90deg,
+#caa94d,
+#ffd700,
+#fff4b0,
+#ffd700,
+#caa94d
+);
+background-size:300%;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:brilloTexto 4s linear infinite;
+}
+
+@keyframes brilloTexto{
+0%{background-position:0%}
+100%{background-position:300%}
+}
+
+/* PANTALLA CARGA PREMIUM */
+
+#pantallaCarga{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:radial-gradient(circle,#000,#050505,#000);
+display:flex;
+align-items:flex-start;
+justify-content:center;
+padding-top:120px;
+z-index:99999;
+overflow:hidden;
+}
+
+/* CANVAS PARTICULAS */
+
+#loaderParticulas{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+}
+
+/* CONTENIDO */
+
+.loader-contenido{
+text-align:center;
+z-index:5;
+}
+
+/* NOMBRE */
+
+.loader-nombre{
+font-family:'Great Vibes',cursive;
+font-size:48px;
+color:#d4af37;
+
+text-shadow:
+0 0 10px rgba(212,175,55,0.8),
+0 0 20px rgba(212,175,55,0.7),
+0 0 40px rgba(212,175,55,0.6);
+
+animation:brilloNombre 3s infinite;
+}
+
+/* TEXTO */
+
+.loader-texto{
+color:white;
+margin-top:10px;
+margin-bottom:20px;
+font-size:16px;
+}
+
+/* BARRA */
+
+.barra{
+width:220px;
+height:10px;
+background:#222;
+border-radius:20px;
+overflow:hidden;
+margin:auto;
+}
+
+.progreso{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#ffd700,#d4af37,#ffd700);
+animation:cargarBarra 3s linear forwards;
+}
+
+@keyframes cargarBarra{
+0%{width:0%}
+100%{width:100%}
+}
+
+@keyframes brilloNombre{
+0%{opacity:.6}
+50%{opacity:1}
+100%{opacity:.6}
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+</style>
+</head>
+
+<body>
+
+<!-- PANTALLA DE CARGA PREMIUM -->
+<div id="pantallaCarga">
+
+<canvas id="loaderParticulas"></canvas>
+
+<div class="loader-contenido">
+
+<h1 class="loader-nombre">
+XV Diana
+</h1>
+
+<p class="loader-texto">
+Preparando tu invitación...
+</p>
+
+<div class="barra">
+<div class="progreso"></div>
+</div>
+
+</div>
+
+</div>
+
+<div class="contenedor">
+
+<div class="bloque bloque-particulas bloque-fecha">
+<img src="bloque1.webp" loading="lazy">
+
+  <div class="fecha-evento">
+    24 diciembre 2026
+  </div>
+
+  <canvas id="particulas"></canvas>
+
+  <!-- Botón de música solo en este bloque -->
+  <div class="audio-btn" id="btnAudio">▶</div>
+</div>
+
+<div class="bloque bloque-btn">
+  <img src="bloque2.webp">
+</div>
+
+<div class="bloque bloque-particulas-xv">
+  <img src="bloque3.webp">
+  <canvas id="particulasXV"></canvas>
+</div>
+
+<div class="bloque bloque-reflejo">
+  <img src="bloque4.webp">
+</div>
+
+<div class="bloque bloque-estrellas">
+  <img src="bloque5.webp">
+  <span class="estrella e1"></span>
+  <span class="estrella e2"></span>
+  <span class="estrella e3"></span>
+  <span class="estrella e4"></span>
+</div>
+
+<div class="bloque bloque-contador">
+  <img src="bloque6.webp">
+
+  <div class="countdown">
+    <div class="time-box"><span id="dias">00</span><small>DÍAS</small></div>
+    <div class="time-box"><span id="horas">00</span><small>HRS</small></div>
+    <div class="time-box"><span id="minutos">00</span><small>MIN</small></div>
+    <div class="time-box"><span id="segundos">00</span><small>SEG</small></div>
+  </div>
+
+  <canvas id="particulasCountdown"></canvas>
+</div>
+
+<div class="bloque bloque-ubicacion">
+  <img src="bloque7.webp">
+
+  <div class="btn-wrapper">
+    <a href="https://maps.google.com/?q=Parroquia+de+San+Juan" target="_blank" class="btn-ubicacion btn-parroquia">
+  Ver mapa
+</a>
+  </div>
+
+  <div class="btn-wrapper">
+    <a href="https://maps.google.com/?q=Salon+de+Eventos+Los+Pinos" target="_blank" class="btn-ubicacion btn-salon">
+  Ver mapa
+</a>
+  </div>
+</div>
+<div class="bloque bloque-reflejo">
+  <img src="bloque8.webp">
+</div>
+<div class="bloque bloque-acordeon" style="position: relative;">
+  <img src="bloque9.webp" style="width:100%; display:block;">
+
+  <!-- Botón 3D Dorado -->
+  <div class="btn-datos" onclick="toggleDatos()">
+    Toca aquí
+    <span class="flecha">▼</span>
+  </div>
+
+  <!-- Ventana acordeón -->
+  <div class="panel-datos" id="panelDatos">
+    <p><strong>Beneficiario:</strong> María Fernanda López</p>
+    <p><strong>Banco:</strong> BBVA Bancomer</p>
+    <p><strong>Cuenta:</strong> 012345678901234567</p>
+  </div>
+</div>
+<div class="bloque"><img src="bloque10.webp"></div>
+
+<div class="bloque">
+  <div style="padding:30px; background:#fff; text-align:center;">
+    <h2 style="margin-bottom:15px; color:#d4af37;">Confirmar Asistencia</h2>
+
+    <form id="formConfirmacion" style="display:flex; flex-direction:column; gap:10px;">
+      <input type="text" id="nombre" placeholder="Tu nombre" required style="padding:10px;">
+      <input type="tel" id="telefono" placeholder="Tu teléfono" required style="padding:10px;">
+
+      <select id="estado" required style="padding:10px;">
+        <option value="">¿Asistirás?</option>
+        <option value="si">Sí asistiré</option>
+        <option value="no">No podré asistir</option>
+      </select>
+
+      <input type="number" id="personas" placeholder="Número de personas" min="1" required style="padding:10px;">
+
+<button type="submit">
+        Confirmar
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- BLOQUE MÁS OPCIONES (QR + Calendario) -->
+<div class="bloque bloque-botones" style="text-align:center; padding:30px; background:#fff;">
+  <h2 style="margin-bottom:15px; color:#d4af37;">Más opciones</h2>
+
+  <!-- Botón QR -->
+  <button id="btnQR">
+  Ver QR
+</button>
+
+<a id="btnCalendario"
+href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=XV+Diana&dates=20261224T220000/20261225T020000&details=Fiesta+de+XV+Diana&location=Salón+de+Eventos"
+target="_blank">
+Agregar al calendario
+</a>
+
+  <!-- Contenedor oculto para el QR -->
+  <div id="contenedorQR" style="margin-top:15px; display:none;">
+    <img id="imagenQR" src="" alt="QR Invitación" style="width:180px; height:180px;">
+  </div>
+</div>
+
+<div class="bloque bloque-fotos">
+
+<div style="padding:30px;background:#fff;text-align:center;">
+
+<h2 style="color:#d4af37;margin-bottom:15px;">
+Comparte tus fotos
+</h2>
+
+<p style="margin-bottom:15px;">
+Escanea el QR para subir tus fotos del evento
+</p>
+
+<img id="qrUpload" style="width:180px;height:180px;">
+
+<hr style="margin:25px 0;">
+
+<h2 style="color:#d4af37;margin-bottom:15px;">
+Fotos oficiales
+</h2>
+
+<p style="margin-bottom:5px;">
+Solo familiares y quinceañera
+</p>
+
+<p class="texto-descarga">
+🔒 Descarga de fotos con contraseña (solicitar a la quinceañera)
+</p>
+
+<button id="btnDescargar">
+Descargar fotos
+</button>
+
+</div>
+
+<div id="mensajeError" class="popup-error">
+  <div class="popup-contenido">
+    <p>Contraseña incorrecta</p>
+    <button onclick="cerrarError()">Aceptar</button>
+  </div>
+</div>
+
+<div id="popupPassword" class="popup-pass">
+  <div class="popup-contenido">
+
+    <h2>Acceso privado</h2>
+    <p>Ingresa la contraseña para continuar</p>
+
+    <input type="password" id="inputPassword" placeholder="Contraseña">
+
+    <div class="botones">
+      <button onclick="verificarPassword()">Entrar</button>
+     <button onclick="cerrarPassword()">Cancelar</button>
+    </div>
+
+    <p id="mensajeErrorPass" style="display:none;color:red;">
+Contraseña incorrecta
+</p>
+
+  </div>
+</div>
+
+</div>
+
+<audio id="musica" preload="auto" loop>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* AUDIO */
+const musica=document.getElementById("musica");
+const btn=document.getElementById("btnAudio");
+let activo=false;
+
+btn.addEventListener("click",()=>{
+  if(!activo){
+    musica.play();
+    btn.innerHTML="⏸";
+    activo=true;
+  }else{
+    musica.pause();
+    btn.innerHTML="▶";
+    activo=false;
+  }
+});
+
+/* SCROLL FIX REAL */
+const bloques=document.querySelectorAll('.bloque');
+const obs=new IntersectionObserver(e=>{
+  e.forEach(x=>{
+    if(x.isIntersecting)
+      x.target.classList.add('visible');
+  });
+},{
+  threshold:0,
+  rootMargin:"0px 0px -80px 0px"
+});
+
+bloques.forEach(b=>obs.observe(b));
+window.addEventListener("load",()=>{
+  bloques.forEach(b=>{
+    if(b.getBoundingClientRect().top<window.innerHeight*1.1)
+      b.classList.add('visible');
+  });
+});
+
+setTimeout(()=>{
+  bloques.forEach(b=>b.classList.add('visible'));
+},1200);
+
+/* PARTICULAS BLOQUE 1 */
+const c1=document.getElementById("particulas");
+const x1=c1.getContext("2d");
+function rs1(){c1.width=c1.offsetWidth;c1.height=c1.offsetHeight}
+rs1();addEventListener("resize",rs1);
+
+let p1=[];
+for(let i=0;i<40;i++)p1.push({x:Math.random()*c1.width,y:Math.random()*c1.height,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6,r:Math.random()*2+1,a:Math.random()});
+function loop1(){
+  x1.clearRect(0,0,c1.width,c1.height);
+  p1.forEach(p=>{
+    x1.beginPath();
+    x1.arc(p.x,p.y,p.r,0,Math.PI*2);
+    x1.fillStyle=`rgba(255,215,0,${p.a})`;
+    x1.fill();
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0||p.x>c1.width)p.dx*=-1;
+    if(p.y<0||p.y>c1.height)p.dy*=-1;
+  });
+  requestAnimationFrame(loop1);
+}
+loop1();
+
+// BLOQUE 3 – PARTÍCULAS DORADAS
+const cXV = document.getElementById("particulasXV");
+const xXV = cXV.getContext("2d");
+
+function resizeXV() {
+  cXV.width = cXV.offsetWidth;
+  cXV.height = cXV.offsetHeight;
+}
+resizeXV();
+window.addEventListener("resize", resizeXV);
+
+// Crear partículas
+let pXV = [];
+for (let i = 0; i < 40; i++) {
+  pXV.push({
+    x: Math.random() * cXV.width,
+    y: Math.random() * cXV.height,
+    dx: (Math.random() - 0.5) * 1,    // velocidad horizontal
+    dy: (Math.random() - 0.5) * 1,    // velocidad vertical
+    r: Math.random() * 2 + 1,         // radio
+    a: Math.random()                    // opacidad
+  });
+}
+
+// Animación partículas
+function loopXV() {
+  xXV.clearRect(0, 0, cXV.width, cXV.height);
+
+  pXV.forEach((p, i) => {
+    xXV.beginPath();
+    xXV.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+    // Color dorado con brillo
+    xXV.fillStyle = `rgba(255,215,0,${p.a})`; // dorado
+    xXV.shadowBlur = 6;
+    xXV.shadowColor = "rgba(255,223,0,0.8)";
+
+    xXV.fill();
+
+    // Movimiento
+    p.x += p.dx;
+    p.y += p.dy;
+
+    // Rebote al llegar al borde
+    if (p.x < 0 || p.x > cXV.width) p.dx *= -1;
+    if (p.y < 0 || p.y > cXV.height) p.dy *= -1;
+  });
+
+  requestAnimationFrame(loopXV);
+}
+
+loopXV();
+
+/* CONTADOR */
+const fechaEvento=new Date("2026-12-24T22:00:00").getTime();
+
+setInterval(()=>{
+  const d=Math.max(0,fechaEvento-Date.now());
+
+  document.getElementById("dias").innerText=Math.floor(d/86400000).toString().padStart(2,"0");
+  document.getElementById("horas").innerText=(Math.floor(d/3600000)%24).toString().padStart(2,"0");
+  document.getElementById("minutos").innerText=(Math.floor(d/60000)%60).toString().padStart(2,"0");
+  document.getElementById("segundos").innerText=(Math.floor(d/1000)%60).toString().padStart(2,"0");
+
+},1000);
+
+/* PARTICULAS ROSAS CONTADOR */
+const cC=document.getElementById("particulasCountdown");
+const xC=cC.getContext("2d");
+function rsC(){cC.width=cC.offsetWidth;cC.height=cC.offsetHeight}
+rsC();addEventListener("resize",rsC);
+
+let pC=[];
+function spawn(){
+  return{ x:cC.width/2+(Math.random()*200-100),
+          y:cC.height*.75,
+          dx:(Math.random()-.5)*1.2,
+          dy:-Math.random()*2-1,
+          r:Math.random()*2+1,
+          a:1 };
+}
+function loopC(){
+  xC.clearRect(0,0,cC.width,cC.height);
+  if(pC.length<120)pC.push(spawn());
+  pC.forEach((p,i)=>{
+    xC.beginPath();
+    xC.arc(p.x,p.y,p.r,0,Math.PI*2);
+    xC.fillStyle=`rgba(212,175,55,${p.a})`; // antes estaba rosa
+    xC.fill();
+    p.x+=p.dx;p.y+=p.dy;p.a-=.015;
+    if(p.a<=0)pC.splice(i,1);
+  });
+  requestAnimationFrame(loopC);
+}
+loopC();
+
+function toggleDatos(){
+  const panel = document.getElementById("panelDatos");
+  panel.classList.toggle("activo");
+}
+
+// contraseña descarga fotos
+document.getElementById("btnDescargar").addEventListener("click",()=>{
+document.getElementById("popupPassword").style.display="flex";
+});
+
+
+function cerrarError(){
+document.getElementById("mensajeError").style.display="none";
+}
+
+</script>
+
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD-PRgs8oaouJxaCPbwInWGL01O-Ffhbws",
+  authDomain: "confirmaciones-boda-de9fb.firebaseapp.com",
+  projectId: "confirmaciones-boda-de9fb",
+  storageBucket: "confirmaciones-boda-de9fb.firebasestorage.app",
+  messagingSenderId: "108154294992",
+  appId: "1:108154294992:web:493bab4db7b66b749d84d5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.getElementById("formConfirmacion").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById("nombre").value;
+  const telefono = document.getElementById("telefono").value;
+  const estado = document.getElementById("estado").value;
+  const personas = document.getElementById("personas").value;
+
+  await addDoc(collection(db, "confirmaciones"), {
+    nombre,
+    telefono,
+    estado,
+    personas: Number(personas),
+    fecha: new Date()
+  });
+
+  alert("Confirmación enviada ❤️");
+  e.target.reset();
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+<script>
+
+const qrUpload = document.getElementById("qrUpload");
+
+if(qrUpload){
+const qrFotos = new QRious({
+  element: qrUpload,
+  value: "https://www.dropbox.com/request/Vc7syKzS8YHIieil8pnJ",
+  size: 180
+});
+}
+
+
+// QR invitación
+const btnQR = document.getElementById("btnQR");
+const contQR = document.getElementById("contenedorQR");
+const imgQR = document.getElementById("imagenQR");
+
+if(btnQR){
+
+  btnQR.addEventListener("click", () => {
+
+    const urlInvitacion = window.location.href;
+
+    const qr = new QRious({
+      value: urlInvitacion,
+      size: 180
+    });
+
+    imgQR.src = qr.toDataURL();
+
+    contQR.style.display =
+    contQR.style.display === "none" ? "block" : "none";
+
+  });
+
+}
+// Calendario
+const btnCalendario = document.getElementById("btnCalendario");
+
+btnCalendario.addEventListener("click", () => {
+
+  const start = "20261224T170000";
+  const end = "20261224T230000";
+
+  const title = "XV de Lupita";
+  const details = "Celebración del XV de Lupita";
+  const location = "Dirección del evento";
+
+  const url =
+    `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+
+  btnCalendario.href = url;
+
+});
+
+function verificarPassword(){
+
+const pass = document.getElementById("inputPassword").value;
+
+if(pass === "xv2026"){
+
+window.open("https://www.dropbox.com/scl/fo/lx2ieq96b7l40mcm6id88/AFyt2tGbV0OTUNauFolNGP0?rlkey=4krboyxfuo8kdbr2bawyn2g5d&st=sa8o2sm4&dl=0");
+
+document.getElementById("popupPassword").style.display="none";
+
+}else{
+
+document.getElementById("mensajeErrorPass").style.display="block";
+
+}
+
+}
+function cerrarPassword(){
+document.getElementById("popupPassword").style.display="none";
+}
+
+</script>
+
+<script>
+
+window.addEventListener("load",()=>{
+
+const pantalla = document.getElementById("pantallaCarga");
+
+setTimeout(()=>{
+
+pantalla.style.opacity="0";
+
+setTimeout(()=>{
+pantalla.style.display="none";
+},800);
+
+},2500);
+
+});
+
+</script>
+
+<script>
+
+/* PARTICULAS LOADER */
+
+const canvasLoader = document.getElementById("loaderParticulas");
+const ctxLoader = canvasLoader.getContext("2d");
+
+function resizeLoader(){
+canvasLoader.width = window.innerWidth;
+canvasLoader.height = window.innerHeight;
+}
+
+resizeLoader();
+window.addEventListener("resize", resizeLoader);
+
+let particulasLoader=[];
+
+for(let i=0;i<60;i++){
+particulasLoader.push({
+x:Math.random()*canvasLoader.width,
+y:Math.random()*canvasLoader.height,
+dx:(Math.random()-.5)*1,
+dy:(Math.random()-.5)*1,
+r:Math.random()*2+1,
+a:Math.random()
+});
+}
+
+function animarLoader(){
+
+ctxLoader.clearRect(0,0,canvasLoader.width,canvasLoader.height);
+
+particulasLoader.forEach(p=>{
+
+ctxLoader.beginPath();
+ctxLoader.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctxLoader.fillStyle=`rgba(255,215,0,${p.a})`;
+ctxLoader.fill();
+
+p.x+=p.dx;
+p.y+=p.dy;
+
+if(p.x<0||p.x>canvasLoader.width)p.dx*=-1;
+if(p.y<0||p.y>canvasLoader.height)p.dy*=-1;
+
+});
+
+requestAnimationFrame(animarLoader);
+
+}
+
+animarLoader();
+
+</script>
+
+</body>
+</html>
