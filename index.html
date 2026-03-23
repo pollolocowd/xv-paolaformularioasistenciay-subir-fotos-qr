@@ -20,11 +20,7 @@ body{
   background:#000;
   display:flex;
   justify-content:center;
-}
-
-.contenedor{
-  max-width:430px;
-  width:100%;
+  perspective:1200px;
 }
 
 .bloque img{
@@ -34,13 +30,13 @@ body{
 
 /* BOTÓN AUDIO */
 .audio-btn{
-  position:fixed;
-  bottom:20px;
-  right:20px;
+  position: absolute;  /* antes estaba fixed */
+  top: 15px;           /* margen desde arriba del bloque */
+  right: 15px;         /* margen desde la derecha del bloque */
   width:70px;
   height:70px;
   border-radius:50%;
-  background:linear-gradient(145deg,#ff6bd6,#ff1aa3);
+  background:linear-gradient(145deg,#fff6b7,#ffd700,#d4af37,#b8960c);
   box-shadow:0 10px 20px rgba(0,0,0,0.6),
              inset 0 -4px 8px rgba(255,255,255,0.35),
              inset 0 4px 6px rgba(0,0,0,0.4);
@@ -50,24 +46,25 @@ body{
   font-size:30px;
   color:#fff;
   cursor:pointer;
-  z-index:999;
+  z-index:10;       /* suficiente para que quede arriba de la imagen */
+  animation:flotarAudio 3s ease-in-out infinite;
 }
-
 /* EFECTO SCROLL */
 .bloque{
   opacity:0;
-  transform:translateY(40px) scale(.98);
-  transition:.9s cubic-bezier(.19,1,.22,1);
+  transform:translateY(120px) scale(.85) rotateX(25deg);
+  filter:blur(8px);
+  transition:
+  transform 1.4s cubic-bezier(.19,1,.22,1),
+  opacity 1.2s ease,
+  filter 1.2s ease;
+  transform-origin:center top;
+  will-change:transform,opacity,filter;
 }
-
 .bloque.visible{
   opacity:1;
-  transform:translateY(0) scale(1);
-}
-
-.bloque:first-child{
-  opacity:1 !important;
-  transform:none !important;
+  transform:translateY(0) scale(1) rotateX(0deg);
+  filter:blur(0);
 }
 
 /* TEXTO BLOQUE 2 */
@@ -113,21 +110,6 @@ body{
   }
 }
 
-.texto-boton{
-  position:absolute;
-  left:50%;
-  top:84%;
-  transform:translate(-50%,-50%);
-  width:72%;
-  text-align:center;
-  font-size:16px;
-  line-height:1.35;
-  color:#5a2a3a;
-  font-weight:500;
-  pointer-events:none;
-}
-
-.texto-boton span{ display:block; }
 
 /* PARTICULAS */
 .bloque-particulas,
@@ -147,7 +129,7 @@ canvas{
 /* CONTADOR */
 .countdown{
   position:absolute;
-  bottom:14%;
+  bottom:19%;
   left:50%;
   transform:translateX(-50%);
   display:flex;
@@ -158,30 +140,51 @@ canvas{
 .time-box{
   width:68px;
   height:78px;
-  background:linear-gradient(145deg,#ff86cf,#ff3fa7);
+  background:linear-gradient(
+    145deg,
+    #fff8dc 0%,
+    #f7e27c 20%,
+    #d4af37 45%,
+    #b8860b 70%,
+    #fff8dc 100%
+  );
   border-radius:14px;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  color:#fff;
-  box-shadow:0 0 18px rgba(255,0,170,.6);
-  animation:floatPink 3s ease-in-out infinite;
+  color:#2c1c00;
+  box-shadow:0 0 18px rgba(212,175,55,0.6);
+  animation:floatGold 3s ease-in-out infinite;
 }
 
 .time-box span{
   font-size:26px;
   font-weight:700;
+  color:#2c1c00;
 }
 
 .time-box small{
   font-size:11px;
+  color:#3b2a00;
 }
 
-@keyframes floatPink{
+@keyframes floatGold{
   0%{transform:translateY(0)}
   50%{transform:translateY(-6px)}
   100%{transform:translateY(0)}
+}
+
+@keyframes flotarAudio{
+  0%{
+    transform:translateY(0);
+  }
+  50%{
+    transform:translateY(-6px);
+  }
+  100%{
+    transform:translateY(0);
+  }
 }
 
 /* BLOQUE 5 ESTRELLAS */
@@ -222,37 +225,35 @@ canvas{
 }
 
 .bloque-ubicacion{
-  position:relative;
+  position: relative;
+  height: auto; /* se adapta a la imagen */
 }
 
+/* Botones centrados horizontalmente */
 .btn-ubicacion{
   position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  display:inline-block;
   padding:10px 18px;
-  background:linear-gradient(145deg,#ff86cf,#ff3fa7);
+  background:linear-gradient(145deg,#fff6b7,#ffd700,#d4af37,#b8960c);
   color:#fff;
   font-weight:600;
   border-radius:12px;
   text-decoration:none;
-  box-shadow:0 4px 12px rgba(255,0,170,0.5);
-  transition:transform .3s, box-shadow .3s;
+  box-shadow:0 4px 12px rgba(255,215,0,0.7);
+  transition:transform .3s, box-shadow .3s, background .3s;
   font-size:14px;
+  animation:latido 2s infinite;
 }
 
-.btn-ubicacion:hover{
-  transform:scale(1.1);
-  box-shadow:0 6px 18px rgba(255,0,170,0.7);
-}
-
+/* Ajusta la posición vertical según proporción de la imagen */
 .btn-parroquia{
-  top: 45%;       /* Baja el botón */
-  left: 50%;      /* Lo centra horizontalmente */
-  transform: translate(-50%, -55%); /* Ajusta el centro exacto */
+  top: 9%;  /* puedes subir o bajar cambiando el % */
 }
 
 .btn-salon{
-  top: 95%;       /* Ajusta para bajarlo o subirlo según se vea bien */
-  left: 50%;      /* Lo centra horizontalmente */
-  transform: translate(-50%, -60%); /* Centra el botón exacto */
+  top: 59%;  /* puedes subir o bajar cambiando el % */
 }
 
 /* BLOQUE 9 */
@@ -261,89 +262,371 @@ canvas{
   overflow:hidden;
 }
 
-/* BOTÓN 3D */
+/* BOTÓN 3D DORADO */
 .btn-datos{
-  position:absolute;
-  bottom:60%;
-  left:50%;
-  transform:translateX(-50%);
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
   padding:14px 28px;
-  background:linear-gradient(145deg,#ff86cf,#ff3fa7);
+  background:linear-gradient(145deg,#ffd700,#b8860b);
   color:#fff;
   font-weight:700;
   border-radius:16px;
   cursor:pointer;
-  box-shadow:
-    0 8px 0 #c21875,
-    0 12px 20px rgba(255,0,170,0.5);
-  transition:.2s;
+  box-shadow:0 8px 0 #c18f00, 0 12px 20px rgba(255,215,0,0.5);
   display:flex;
   align-items:center;
   gap:8px;
-}
+  z-index:10;
 
-/* Efecto presionado */
-.btn-datos:active{
-  transform:translateX(-50%) translateY(6px);
-  box-shadow:
-    0 2px 0 #c21875,
-    0 6px 12px rgba(255,0,170,0.4);
+  animation: latido 2s infinite;
 }
-
-/* Flecha animada */
 .flecha{
   font-size:14px;
   animation:rebote 1.2s infinite;
 }
 
-@keyframes rebote{
-  0%,100%{ transform:translateY(0); }
-  50%{ transform:translateY(4px); }
-}
-
-/* PANEL ACORDEÓN */
 .panel-datos{
-  position:absolute;
-  bottom:5%;
-  left:50%;
-  transform:translateX(-50%);
-  width:85%;
-  background:rgba(255,255,255,0.95);
-  border-radius:18px;
-  padding:0 20px;
-  max-height:0;
-  overflow:hidden;
-  transition:max-height .5s ease, padding .4s ease;
+  position: absolute;
+  top: 85%; /* justo debajo del botón */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  background: rgba(255,255,255,0.95);
+  border-radius: 18px;
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .5s ease, padding .4s ease;
   box-shadow:0 10px 25px rgba(0,0,0,0.2);
   text-align:left;
 }
 
-/* Cuando está activo */
 .panel-datos.activo{
   max-height:200px;
   padding:20px;
 }
 
+
+@keyframes latido{
+  0%{
+    transform:translateX(-50%) scale(1);
+  }
+  50%{
+    transform:translateX(-50%) scale(1.08);
+  }
+  100%{
+    transform:translateX(-50%) scale(1);
+  }
+}
+
+/* FORMULARIO BOTONES DORADOS */
+
+#formConfirmacion button,
+#btnQR,
+#btnCalendario{
+  padding:12px 20px;
+  background:linear-gradient(145deg,#fff6b7,#ffd700,#d4af37,#b8960c);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+  box-shadow:0 6px 15px rgba(212,175,55,0.6);
+  cursor:pointer;
+  transition:.3s;
+}
+
+/* efecto al tocar */
+#formConfirmacion button:hover,
+#btnQR:hover,
+#btnCalendario:hover{
+  transform:scale(1.05);
+  box-shadow:0 10px 20px rgba(212,175,55,0.9);
+}
+
+.bloque.visible:hover{
+  transform:translateY(-8px);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.5),
+    0 0 25px rgba(212,175,55,0.6);
+}
+
+.contenedor{
+  transform-style:preserve-3d;
+  transition:transform .2s ease-out;
+}
+
+.bloque{
+  transform-style:preserve-3d;
+  transition:transform .6s ease;
+}
+
+/* CONTENEDOR BLOQUE FECHA */
+.bloque-fecha{
+  position:relative;
+}
+
+/* TEXTO FECHA */
+.fecha-evento{
+  position:absolute;
+
+  top:6%;     /* mueve ARRIBA / ABAJO */
+  left:50%;    /* mueve IZQUIERDA / DERECHA */
+
+  transform:translate(-50%,-50%);
+
+  font-family:'Great Vibes',cursive;
+  font-size:38px;
+  color:#d4af37;
+
+  text-shadow:
+    0 2px 5px rgba(0,0,0,0.6),
+    0 0 10px rgba(212,175,55,0.7);
+
+  z-index:5;
+}
+
+.popup-error{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.popup-contenido{
+background:white;
+padding:20px;
+border-radius:10px;
+text-align:center;
+font-size:18px;
+}
+
+.popup-contenido button{
+margin-top:10px;
+padding:8px 20px;
+border:none;
+background:#c9a227;
+color:white;
+border-radius:5px;
+}
+
+.popup-pass{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.popup-contenido{
+background:white;
+padding:30px;
+border-radius:15px;
+text-align:center;
+width:300px;
+box-shadow:0 0 20px rgba(0,0,0,0.3);
+}
+
+.popup-contenido h2{
+margin-bottom:10px;
+font-family:serif;
+}
+
+.popup-contenido input{
+width:90%;
+padding:10px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.botones{
+margin-top:15px;
+}
+
+.botones button{
+padding:8px 15px;
+margin:5px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#d4af37;
+color:white;
+}
+
+#mensajeError{
+color:red;
+display:none;
+margin-top:10px;
+}
+
+.texto-descarga{
+font-size:14px;
+font-weight:600;
+background:linear-gradient(
+90deg,
+#caa94d,
+#ffd700,
+#fff4b0,
+#ffd700,
+#caa94d
+);
+background-size:300%;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:brilloTexto 4s linear infinite;
+}
+
+@keyframes brilloTexto{
+0%{background-position:0%}
+100%{background-position:300%}
+}
+
+/* PANTALLA CARGA PREMIUM */
+
+#pantallaCarga{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:radial-gradient(circle,#000,#050505,#000);
+display:flex;
+align-items:flex-start;
+justify-content:center;
+padding-top:120px;
+z-index:99999;
+overflow:hidden;
+}
+
+/* CANVAS PARTICULAS */
+
+#loaderParticulas{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+}
+
+/* CONTENIDO */
+
+.loader-contenido{
+text-align:center;
+z-index:5;
+}
+
+/* NOMBRE */
+
+.loader-nombre{
+font-family:'Great Vibes',cursive;
+font-size:48px;
+color:#d4af37;
+
+text-shadow:
+0 0 10px rgba(212,175,55,0.8),
+0 0 20px rgba(212,175,55,0.7),
+0 0 40px rgba(212,175,55,0.6);
+
+animation:brilloNombre 3s infinite;
+}
+
+/* TEXTO */
+
+.loader-texto{
+color:white;
+margin-top:10px;
+margin-bottom:20px;
+font-size:16px;
+}
+
+/* BARRA */
+
+.barra{
+width:220px;
+height:10px;
+background:#222;
+border-radius:20px;
+overflow:hidden;
+margin:auto;
+}
+
+.progreso{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#ffd700,#d4af37,#ffd700);
+animation:cargarBarra 3s linear forwards;
+}
+
+@keyframes cargarBarra{
+0%{width:0%}
+100%{width:100%}
+}
+
+@keyframes brilloNombre{
+0%{opacity:.6}
+50%{opacity:1}
+100%{opacity:.6}
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 </style>
 </head>
 
 <body>
 
+<!-- PANTALLA DE CARGA PREMIUM -->
+<div id="pantallaCarga">
+
+<canvas id="loaderParticulas"></canvas>
+
+<div class="loader-contenido">
+
+<h1 class="loader-nombre">
+XV Diana
+</h1>
+
+<p class="loader-texto">
+Preparando tu invitación...
+</p>
+
+<div class="barra">
+<div class="progreso"></div>
+</div>
+
+</div>
+
+</div>
+
 <div class="contenedor">
 
-<div class="bloque bloque-particulas">
-  <img src="bloque1.webp">
+<div class="bloque bloque-particulas bloque-fecha">
+<img src="bloque1.webp" loading="lazy">
+
+  <div class="fecha-evento">
+    24 diciembre 2026
+  </div>
+
   <canvas id="particulas"></canvas>
+
+  <!-- Botón de música solo en este bloque -->
+  <div class="audio-btn" id="btnAudio">▶</div>
 </div>
 
 <div class="bloque bloque-btn">
   <img src="bloque2.webp">
-  <div class="texto-boton">
-    <span>Con mucho entusiasmo y alegría,</span>
-    <span>los invitamos a celebrar</span>
-    <span>el momento más especial</span>
-    <span>de mi vida</span>
-  </div>
 </div>
 
 <div class="bloque bloque-particulas-xv">
@@ -379,23 +662,25 @@ canvas{
 <div class="bloque bloque-ubicacion">
   <img src="bloque7.webp">
 
-  <!-- Botones de ubicación -->
-  <a href="https://maps.app.goo.gl/6C8YXR3zc164KboX6" target="_blank" class="btn-ubicacion btn-parroquia">
-    Ubicacion
-  </a>
+  <div class="btn-wrapper">
+    <a href="https://maps.google.com/?q=Parroquia+de+San+Juan" target="_blank" class="btn-ubicacion btn-parroquia">
+  Ver mapa
+</a>
+  </div>
 
-  <a href="https://maps.app.goo.gl/sYFRkpUgoh5NBbeM9" target="_blank" class="btn-ubicacion btn-salon">
-    Ubicacion
-  </a>
+  <div class="btn-wrapper">
+    <a href="https://maps.google.com/?q=Salon+de+Eventos+Los+Pinos" target="_blank" class="btn-ubicacion btn-salon">
+  Ver mapa
+</a>
+  </div>
 </div>
-
 <div class="bloque bloque-reflejo">
   <img src="bloque8.webp">
 </div>
-<div class="bloque bloque-acordeon">
-  <img src="bloque9.webp">
+<div class="bloque bloque-acordeon" style="position: relative;">
+  <img src="bloque9.webp" style="width:100%; display:block;">
 
-  <!-- Botón 3D -->
+  <!-- Botón 3D Dorado -->
   <div class="btn-datos" onclick="toggleDatos()">
     Toca aquí
     <span class="flecha">▼</span>
@@ -412,7 +697,7 @@ canvas{
 
 <div class="bloque">
   <div style="padding:30px; background:#fff; text-align:center;">
-    <h2 style="margin-bottom:15px; color:#ff3fa7;">Confirmar Asistencia</h2>
+    <h2 style="margin-bottom:15px; color:#d4af37;">Confirmar Asistencia</h2>
 
     <form id="formConfirmacion" style="display:flex; flex-direction:column; gap:10px;">
       <input type="text" id="nombre" placeholder="Tu nombre" required style="padding:10px;">
@@ -426,7 +711,7 @@ canvas{
 
       <input type="number" id="personas" placeholder="Número de personas" min="1" required style="padding:10px;">
 
-      <button type="submit" style="padding:12px; background:#ff3fa7; color:#fff; border:none;">
+<button type="submit">
         Confirmar
       </button>
     </form>
@@ -435,21 +720,83 @@ canvas{
 
 <!-- BLOQUE MÁS OPCIONES (QR + Calendario) -->
 <div class="bloque bloque-botones" style="text-align:center; padding:30px; background:#fff;">
-  <h2 style="margin-bottom:15px; color:#ff3fa7;">Más opciones</h2>
+  <h2 style="margin-bottom:15px; color:#d4af37;">Más opciones</h2>
 
   <!-- Botón QR -->
-  <button id="btnQR" style="padding:12px 20px; margin:10px; background:#ff86cf; color:#fff; border:none; border-radius:8px; cursor:pointer;">
-    Ver QR
-  </button>
+  <button id="btnQR">
+  Ver QR
+</button>
 
-  <!-- Botón Calendario -->
-  <a id="btnCalendario" href="#" target="_blank" style="padding:12px 20px; margin:10px; display:inline-block; background:#ff3fa7; color:#fff; border-radius:8px; text-decoration:none;">
-    Agregar al calendario
-  </a>
+<a id="btnCalendario"
+href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=XV+Diana&dates=20261224T220000/20261225T020000&details=Fiesta+de+XV+Diana&location=Salón+de+Eventos"
+target="_blank">
+Agregar al calendario
+</a>
 
   <!-- Contenedor oculto para el QR -->
   <div id="contenedorQR" style="margin-top:15px; display:none;">
     <img id="imagenQR" src="" alt="QR Invitación" style="width:180px; height:180px;">
+  </div>
+</div>
+
+<div class="bloque bloque-fotos">
+
+<div style="padding:30px;background:#fff;text-align:center;">
+
+<h2 style="color:#d4af37;margin-bottom:15px;">
+Comparte tus fotos
+</h2>
+
+<p style="margin-bottom:15px;">
+Escanea el QR para subir tus fotos del evento
+</p>
+
+<img id="qrUpload" style="width:180px;height:180px;">
+
+<hr style="margin:25px 0;">
+
+<h2 style="color:#d4af37;margin-bottom:15px;">
+Fotos oficiales
+</h2>
+
+<p style="margin-bottom:5px;">
+Solo familiares y quinceañera
+</p>
+
+<p class="texto-descarga">
+🔒 Descarga de fotos con contraseña (solicitar a la quinceañera)
+</p>
+
+<button id="btnDescargar">
+Descargar fotos
+</button>
+
+</div>
+
+<div id="mensajeError" class="popup-error">
+  <div class="popup-contenido">
+    <p>Contraseña incorrecta</p>
+    <button onclick="cerrarError()">Aceptar</button>
+  </div>
+</div>
+
+<div id="popupPassword" class="popup-pass">
+  <div class="popup-contenido">
+
+    <h2>Acceso privado</h2>
+    <p>Ingresa la contraseña para continuar</p>
+
+    <input type="password" id="inputPassword" placeholder="Contraseña">
+
+    <div class="botones">
+      <button onclick="verificarPassword()">Entrar</button>
+     <button onclick="cerrarPassword()">Cancelar</button>
+    </div>
+
+    <p id="mensajeErrorPass" style="display:none;color:red;">
+Contraseña incorrecta
+</p>
+
   </div>
 </div>
 
@@ -459,18 +806,23 @@ canvas{
   <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
-<div class="audio-btn" id="btnAudio">▶</div>
-
 <script>
 /* AUDIO */
 const musica=document.getElementById("musica");
 const btn=document.getElementById("btnAudio");
 let activo=false;
 
-btn.onclick=()=>{
-  if(!activo){ musica.play(); btn.innerHTML="⏸"; activo=true; }
-  else{ musica.pause(); btn.innerHTML="▶"; activo=false; }
-};
+btn.addEventListener("click",()=>{
+  if(!activo){
+    musica.play();
+    btn.innerHTML="⏸";
+    activo=true;
+  }else{
+    musica.pause();
+    btn.innerHTML="▶";
+    activo=false;
+  }
+});
 
 /* SCROLL FIX REAL */
 const bloques=document.querySelectorAll('.bloque');
@@ -519,42 +871,70 @@ function loop1(){
 }
 loop1();
 
-/* PARTICULAS BLOQUE 3 */
-const cXV=document.getElementById("particulasXV");
-const xXV=cXV.getContext("2d");
-function rsXV(){cXV.width=cXV.offsetWidth;cXV.height=cXV.offsetHeight}
-rsXV();addEventListener("resize",rsXV);
+// BLOQUE 3 – PARTÍCULAS DORADAS
+const cXV = document.getElementById("particulasXV");
+const xXV = cXV.getContext("2d");
 
-let pXV=[];
-for(let i=0;i<30;i++)pXV.push({x:cXV.width/2,y:cXV.height/2,dx:(Math.random()-.5)*1.4,dy:(Math.random()-.5)*1.4,r:Math.random()*2+1,a:Math.random()});
-function loopXV(){
-  xXV.clearRect(0,0,cXV.width,cXV.height);
+function resizeXV() {
+  cXV.width = cXV.offsetWidth;
+  cXV.height = cXV.offsetHeight;
+}
+resizeXV();
+window.addEventListener("resize", resizeXV);
 
-  pXV.forEach(p=>{
+// Crear partículas
+let pXV = [];
+for (let i = 0; i < 40; i++) {
+  pXV.push({
+    x: Math.random() * cXV.width,
+    y: Math.random() * cXV.height,
+    dx: (Math.random() - 0.5) * 1,    // velocidad horizontal
+    dy: (Math.random() - 0.5) * 1,    // velocidad vertical
+    r: Math.random() * 2 + 1,         // radio
+    a: Math.random()                    // opacidad
+  });
+}
+
+// Animación partículas
+function loopXV() {
+  xXV.clearRect(0, 0, cXV.width, cXV.height);
+
+  pXV.forEach((p, i) => {
     xXV.beginPath();
-    xXV.arc(p.x,p.y,p.r,0,Math.PI*2);
-    xXV.fillStyle=`rgba(192,192,192,${p.a})`;
+    xXV.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+
+    // Color dorado con brillo
+    xXV.fillStyle = `rgba(255,215,0,${p.a})`; // dorado
+    xXV.shadowBlur = 6;
+    xXV.shadowColor = "rgba(255,223,0,0.8)";
+
     xXV.fill();
 
+    // Movimiento
     p.x += p.dx;
     p.y += p.dy;
 
-    if(p.x < 0 || p.x > cXV.width) p.dx *= -1;
-    if(p.y < 0 || p.y > cXV.height) p.dy *= -1;
+    // Rebote al llegar al borde
+    if (p.x < 0 || p.x > cXV.width) p.dx *= -1;
+    if (p.y < 0 || p.y > cXV.height) p.dy *= -1;
   });
 
   requestAnimationFrame(loopXV);
 }
+
 loopXV();
 
 /* CONTADOR */
 const fechaEvento=new Date("2026-12-24T22:00:00").getTime();
+
 setInterval(()=>{
   const d=Math.max(0,fechaEvento-Date.now());
+
   document.getElementById("dias").innerText=Math.floor(d/86400000).toString().padStart(2,"0");
-  document.getElementById("horas").innerText=Math.floor(d/3600000)%24;
-  document.getElementById("minutos").innerText=Math.floor(d/60000)%60;
-  document.getElementById("segundos").innerText=Math.floor(d/1000)%60;
+  document.getElementById("horas").innerText=(Math.floor(d/3600000)%24).toString().padStart(2,"0");
+  document.getElementById("minutos").innerText=(Math.floor(d/60000)%60).toString().padStart(2,"0");
+  document.getElementById("segundos").innerText=(Math.floor(d/1000)%60).toString().padStart(2,"0");
+
 },1000);
 
 /* PARTICULAS ROSAS CONTADOR */
@@ -578,7 +958,7 @@ function loopC(){
   pC.forEach((p,i)=>{
     xC.beginPath();
     xC.arc(p.x,p.y,p.r,0,Math.PI*2);
-    xC.fillStyle=`rgba(255,80,180,${p.a})`;
+    xC.fillStyle=`rgba(212,175,55,${p.a})`; // antes estaba rosa
     xC.fill();
     p.x+=p.dx;p.y+=p.dy;p.a-=.015;
     if(p.a<=0)pC.splice(i,1);
@@ -590,6 +970,16 @@ loopC();
 function toggleDatos(){
   const panel = document.getElementById("panelDatos");
   panel.classList.toggle("activo");
+}
+
+// contraseña descarga fotos
+document.getElementById("btnDescargar").addEventListener("click",()=>{
+document.getElementById("popupPassword").style.display="flex";
+});
+
+
+function cerrarError(){
+document.getElementById("mensajeError").style.display="none";
 }
 
 </script>
@@ -632,31 +1022,159 @@ document.getElementById("formConfirmacion").addEventListener("submit", async (e)
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
 <script>
-  // QR
-  const btnQR = document.getElementById("btnQR");
-  const contQR = document.getElementById("contenedorQR");
-  const imgQR = document.getElementById("imagenQR");
+
+const qrUpload = document.getElementById("qrUpload");
+
+if(qrUpload){
+const qrFotos = new QRious({
+  element: qrUpload,
+  value: "https://www.dropbox.com/request/Vc7syKzS8YHIieil8pnJ",
+  size: 180
+});
+}
+
+
+// QR invitación
+const btnQR = document.getElementById("btnQR");
+const contQR = document.getElementById("contenedorQR");
+const imgQR = document.getElementById("imagenQR");
+
+if(btnQR){
 
   btnQR.addEventListener("click", () => {
-    const urlInvitacion = window.location.href; // tu invitación
-    const qr = new QRious({ value: urlInvitacion, size: 180 });
+
+    const urlInvitacion = window.location.href;
+
+    const qr = new QRious({
+      value: urlInvitacion,
+      size: 180
+    });
+
     imgQR.src = qr.toDataURL();
-    contQR.style.display = contQR.style.display === "none" ? "block" : "none";
+
+    contQR.style.display =
+    contQR.style.display === "none" ? "block" : "none";
+
   });
 
-  // Calendario
-  const btnCalendario = document.getElementById("btnCalendario");
-  btnCalendario.addEventListener("click", () => {
-    const start = "20261217T170000"; // fecha del evento
-    const end = "20261217T230000";   // hora de fin (aprox)
-    const title = "XV de Lupita";
-    const details = "Celebración del XV de Lupita";
-    const location = "Dirección del evento";
+}
+// Calendario
+const btnCalendario = document.getElementById("btnCalendario");
 
-    const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
-    btnCalendario.href = url;
-  });
+btnCalendario.addEventListener("click", () => {
+
+  const start = "20261224T170000";
+  const end = "20261224T230000";
+
+  const title = "XV de Lupita";
+  const details = "Celebración del XV de Lupita";
+  const location = "Dirección del evento";
+
+  const url =
+    `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
+
+  btnCalendario.href = url;
+
+});
+
+function verificarPassword(){
+
+const pass = document.getElementById("inputPassword").value;
+
+if(pass === "xv2026"){
+
+window.open("https://www.dropbox.com/scl/fo/lx2ieq96b7l40mcm6id88/AFyt2tGbV0OTUNauFolNGP0?rlkey=4krboyxfuo8kdbr2bawyn2g5d&st=sa8o2sm4&dl=0");
+
+document.getElementById("popupPassword").style.display="none";
+
+}else{
+
+document.getElementById("mensajeErrorPass").style.display="block";
+
+}
+
+}
+function cerrarPassword(){
+document.getElementById("popupPassword").style.display="none";
+}
+
+</script>
+
+<script>
+
+window.addEventListener("load",()=>{
+
+const pantalla = document.getElementById("pantallaCarga");
+
+setTimeout(()=>{
+
+pantalla.style.opacity="0";
+
+setTimeout(()=>{
+pantalla.style.display="none";
+},800);
+
+},2500);
+
+});
+
+</script>
+
+<script>
+
+/* PARTICULAS LOADER */
+
+const canvasLoader = document.getElementById("loaderParticulas");
+const ctxLoader = canvasLoader.getContext("2d");
+
+function resizeLoader(){
+canvasLoader.width = window.innerWidth;
+canvasLoader.height = window.innerHeight;
+}
+
+resizeLoader();
+window.addEventListener("resize", resizeLoader);
+
+let particulasLoader=[];
+
+for(let i=0;i<60;i++){
+particulasLoader.push({
+x:Math.random()*canvasLoader.width,
+y:Math.random()*canvasLoader.height,
+dx:(Math.random()-.5)*1,
+dy:(Math.random()-.5)*1,
+r:Math.random()*2+1,
+a:Math.random()
+});
+}
+
+function animarLoader(){
+
+ctxLoader.clearRect(0,0,canvasLoader.width,canvasLoader.height);
+
+particulasLoader.forEach(p=>{
+
+ctxLoader.beginPath();
+ctxLoader.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctxLoader.fillStyle=`rgba(255,215,0,${p.a})`;
+ctxLoader.fill();
+
+p.x+=p.dx;
+p.y+=p.dy;
+
+if(p.x<0||p.x>canvasLoader.width)p.dx*=-1;
+if(p.y<0||p.y>canvasLoader.height)p.dy*=-1;
+
+});
+
+requestAnimationFrame(animarLoader);
+
+}
+
+animarLoader();
+
 </script>
 
 </body>
